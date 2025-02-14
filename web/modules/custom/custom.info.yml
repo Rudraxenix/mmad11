@@ -1,0 +1,6 @@
+name: Custom Module
+type: module
+description: 'Custom Drupal Module.'
+package: Custom
+version: 1.0
+core_version_requirement: ^10 || ^11

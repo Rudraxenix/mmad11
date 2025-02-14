@@ -1,0 +1,10 @@
+{
+    "name": "drupal/faq",
+    "type": "drupal-module",
+    "description": "Frequently Asked Questions.",
+    "homepage": "http://drupal.org/project/faq",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^9 || ^10 || ^11"
+    }
+}

@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400..700;1,400..700&display=swap');
+.star-count {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    cursor: pointer;
+}
+
+.star-count .rating-icons {
+    padding-right: 25px;
+}
+
+.rating-icons {
+    padding-right: 25px;
+    display: flex;
+    gap: 3px;
+}
+
+.star-items .star-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 5px 0;
+}
+
+.star-items .star-item .star-label {
+    width: 45px;
+}
+
+.star-items .star-item .star-value-wrapper {
+    width: calc(100% - 45px);
+    border-radius: 30px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+}
+
+html body .star-items .star-item .star-value .fill-value {
+    border-radius: 30px;
+    background-color: #ffa41c !important;
+    padding: 0 5px;
+    color: white !important;
+    display: flex;
+    justify-content: end;
+}
+
+.accordion-item {
+    border: 0 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, .125) !important;
+}
+
+.accordion-item button {
+    box-shadow: none !important;
+    outline: none;
+}
+
+.solo-clear .order-total-line  {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.solo-clear .order-total-line span {
+    width: auto;
+}
+
+.solo-clear .order-total-line .order-total-line-label {
+    padding-right: 10px;
+}
+
+.w3-img-wrapper .field--name-w3css-media-image img {
+    height: 400px;
+    object-fit: cover;
+}
+
+.w3-hero-full-width-wrapper {
+    text-align: center;
+}
+
+.lpb-btn--add .visually-hidden {
+    clip: unset!important;
+    overflow: visible!important;
+}
+
+
+#drupal-off-canvas-wrapper {
+    background: #fff;
+    color: #000 !important;
+}
+
+
+.cart--cart-block .cart-block--summary .cart-block--link__expand {
+    display: flex;
+    align-items: center;
+    background-color: #47465c;
+    border-radius: 6px;
+    padding: 6px 16px;
+    color: #ffffff;
+    transition: all .32s ease-in-out;
+    gap: 0 4px;
+}
+.cart--cart-block .cart-block--summary .cart-block--link__expand:hover {
+    background-color: #000;
+    color: #ffffff;
+}
+.cart--cart-block .cart-block--summary .cart-block--link__expand .cart-block--summary__count {
+    color: #ffffff;
+    font-size: 12px;
+}
+.cart--cart-block .cart-block--contents {
+    right: 0;
+    width: 400px;
+    color: black;
+    background: white;
+    z-index: 9999;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, .125);
+}
+.cart--cart-block .cart-block--contents .cart-block--contents__links {
+    padding-top: 12px;
+    text-align: right;
+}
+.cart--cart-block .cart-block--contents .cart-block--contents__links a {
+    background-color: #47465c;
+    border-radius: 6px;
+    padding: 6px 16px;
+    color: #ffffff;
+    display: inline-block;
+    transition: all .32s ease-in-out;
+}
+.cart--cart-block .cart-block--contents .cart-block--contents__links a:hover {
+    background-color: #000;
+    color: #ffffff;
+    animation: wiggle 0.3s;
+}
+
+.commerce-add-to-cart-confirmation .button-wrapper {
+    display: flex;
+    gap: 12px 16px;
+    padding-top: 15px;
+}
+.commerce-add-to-cart-confirmation .button-wrapper .button {
+    padding: 0;
+}
+.commerce-add-to-cart-confirmation .button-wrapper a {
+    background-color: #47465c;
+    border-radius: 6px;
+    padding: 6px 16px;
+    color: #ffffff;
+    display: inline-block;
+    transition: all .32s ease-in-out;
+}
+.commerce-add-to-cart-confirmation .button-wrapper a:hover {
+    background-color: #000;
+    color: #ffffff;
+    animation: wiggle 0.3s;
+}
+
+div.commerce-add-to-cart-confirmation .view-confirm-message-product-display .view-content {
+    position: relative;
+	width: 100%;
+	padding: 15px 0;
+    background-color: #f7f7f7;
+}
+div.commerce-add-to-cart-confirmation .view-confirm-message-product-display .view-content .solo-clear {
+    display: flex;
+    gap: 0 12px;
+}
+div.commerce-add-to-cart-confirmation .view-confirm-message-product-display .view-content .solo-clear .views-field {
+    flex: 1 1 auto;
+}
+.commerce-add-to-cart-confirmation .views-row .views-field-total-price__number {
+	position: relative;
+	top: 0;
+	right: 0;
+	font-size: 16px;
+}

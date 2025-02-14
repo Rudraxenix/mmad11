@@ -1,0 +1,38 @@
+<?php
+
+
+
+/**
+ * hook_schema()
+ */
+function custom_schema() {
+
+  $schema['custom_taxonomy_relation'] = array(
+    'description' => 'Taxonomy term relatation.',
+    'fields' => array(
+        'id' => array(
+            'description' => 'The primary identifier',
+            'type' => 'serial',
+            'not null' => TRUE,
+            'unsigned' => TRUE,
+        ),
+        'old_tid' => array(
+            'description' => 'Old site term id.',
+            'type' => 'varchar',
+            'length' => 255,
+            'not null' => TRUE,
+            'default' => '',
+        ),
+        'new_tid' => array(
+            'description' => 'New site term id.',
+            'type' => 'varchar',
+            'length' => 255,
+            'not null' => TRUE,
+            'default' => '',
+        ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}

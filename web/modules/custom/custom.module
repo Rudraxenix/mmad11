@@ -1,0 +1,208 @@
+<?php
+use Drupal\Core\Mail\MailManagerInterface;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Form\FormInterface;
+use \Drupal\user\Entity\User;
+use Drupal\commerce\commerce_product;
+use Drupal\commerce;
+use Drupal\views\Views;
+use \Drupal\views\ViewExecutable;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\commerce_product\Entity\Product;
+use Drupal\Core\Routing\RouteMatchInterface;
+/**
+ * Implements hook_page_attachments().
+ */
+function custom_page_attachments(array &$attachments) {
+	$attachments['#attached']['library'][] = 'custom/extra.admin';
+}
+
+function custom_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+	if ($entity->bundle() == 'guitar_specs') {
+		if($entity->getOwnerID() == 0){
+			throw new \Exception(t('You are not authorized to save nodes'));
+		}
+	}
+}
+
+function custom_mail($key, &$message, $params) {
+	$options = array(
+	'langcode' => $message['langcode'],
+	);
+	if($key == 'review_custom_mail'){
+		$message['from'] = \Drupal::config('system.site')->get('mail');
+		$message['subject']=($params['subject']);
+		$message['body'][] = $params['message'];
+		$message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
+	}
+}
+
+/*Update user order*/
+function custom_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+	if($form_id == 'commerce_order_default_edit_form'){
+		$current_path = \Drupal::service('path.current')->getPath();
+		$url = explode('/', $current_path);
+		$order = \Drupal\commerce_order\Entity\Order::load($url[4]);
+		$date = $order->get('field_expected_shipping_date')->value;
+		$form['field_order_hidden'] = array(
+			'#type' => 'hidden',
+			'#value' => $url[4],
+		);
+		$form['field_order_date_hidden'] = array(
+			'#type' => 'hidden',
+			'#value' => $date,
+		);
+		$form['actions']['submit']['#submit'][] = 'custom_user_order_form_submit';
+	}
+}
+
+function custom_user_order_form_submit($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+	$old_Date = $form_state->getValue('field_order_date_hidden');
+	$order_id = $form_state->getValue('field_order_hidden');
+	$order = \Drupal\commerce_order\Entity\Order::load($order_id);
+	//\Drupal::messenger()->addMessage($form_state->getValue('field_expected_shipping_date'));
+	foreach ($form_state->getValues() as $key => $value) {
+		if($key == 'field_expected_shipping_date'){
+			if(!empty($value[0]['value'])){
+				$newDate = date("Y-m-d", strtotime($value[0]['value']));
+			  	if($newDate == $old_Date){
+
+			  	}else{
+			  		$mailManager = \Drupal::service('plugin.manager.mail');
+			        $module = 'custom';
+			        $key = 'review_custom_mail';
+			        // $to = 'piyush@xenixsoft.com';
+			        $to = $order->get('mail')->getValue()[0]['value'];
+			        $body='Your order has been shipped till '.$newDate;
+			        $params['subject'] = 'Expected Shipping date';
+			        $params['message'] = $body;
+			        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+			        $send = true;
+			        $result = $mailManager->mail($module, $key, $to,$langcode, $params, NULL, $send);
+			        if($result['result'] == true){
+			          \Drupal::messenger()->addStatus(t("Mail sent"));
+			      	}
+			  	}
+			}
+		}
+    }
+}
+
+function new_datalayer_custom($ship_price) {
+ 	$datalayer = datalayer_add(['price' => $ship_price]);
+	return $datalayer;
+}
+
+function custom_preprocess_commerce_product(&$variables){
+	$product = $variables['elements']['#commerce_product'];
+	$variation_id = $product->get('variations')->getValue()[0]['target_id'];
+	$variationobj = \Drupal::entityTypeManager()->getStorage('commerce_product_variation')->load($variation_id);
+	$ship_price = $variationobj->get('price')->getValue();
+	$ship_price = number_format((float)$ship_price[0]['number'], 2, '.', '');
+ 	$obj = new_datalayer_custom($ship_price);
+}
+
+/**
+ * Implementation of hook_views_pre_render().
+ */
+function custom_views_pre_render(ViewExecutable $view) {
+	if(($view->id() == 'customer_reviews') && ($view->current_display == 'block_2')) {
+		$rate = \Drupal::request()->query->get('rate');
+		$results = $view->result;
+    $filteredResults = [];
+    foreach ($results as $key => $result) {
+    	if(!empty($rate)) {
+	    	if ($result->_entity->field_star_star_rating->getValue()[0]['value'] == $rate) {
+	      	$filteredResults[] = $result;
+	    	}
+    	}else{
+    		$filteredResults[] = $result;
+    	}
+    }
+    foreach ($filteredResults as $key => $row) {
+      $row->index = $key;
+    }
+    $view->result = $filteredResults;
+    $view->total_rows = count($filteredResults);
+	}
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for html templates.
+ */
+function custom_preprocess_html(array &$variables) {
+	$product = \Drupal::routeMatch()->getParameter('commerce_product');
+	/*if ($product instanceof \Drupal\commerce_product\Entity\Product) {
+		$product_title = $product->getTitle();
+		$variations = $product->getVariations();
+		foreach ($variations as $variation) {
+			$price = $variation->get('price')->first()->getValue();
+			$price_amount = $price['number'];
+			$price_usd = $variation->get('field_commerce_price_usd')->getValue();
+			$product_availability = $variation->get('field_availability')->getValue();
+			$price_cad = number_format($price_amount,2, '.', '');
+			$price_usd = number_format($price_usd[0]['number'],2, '.', '');
+			if(empty($product_availability[0])) {
+        $availability = 'InStock';
+      }else {
+        $availability = str_replace(" ", "", $product_availability[0]['value']);
+      }
+		}
+		$base_url = \Drupal::request()->getSchemeAndHttpHost();
+    $url = $product->toUrl()->toString();
+    $full_url = $base_url . $url;
+	  // Example schema data (you can adjust this to match your needs)
+	  $schema_data = [
+	    "@context" => "https://schema.org",
+	    "@type" => "Product",
+	    "name" => $product_title,
+	    "offers" => [
+	      [
+	        "@type" => "Offer",
+	        "price" => $price_cad,
+	        "priceCurrency" => "CAD",
+	        "availability" => "https://schema.org/".$availability,
+	        "url" => $full_url,
+	        "shippingDetails" => [
+	          "@type" => "OfferShippingDetails",
+	          "shippingRate" => [
+	            "@type" => "MonetaryAmount",
+	            "value" => "55.00",
+	            "currency" => "CAD",
+	          ],
+	          "shippingDestination" => [
+	            "@type" => "DefinedRegion",
+	            "addressCountry" => "CA",
+	          ],
+	        ],
+	      ],
+	      [
+	        "@type" => "Offer",
+	        "price" => $price_usd,
+	        "priceCurrency" => "USD",
+	        "availability" => "https://schema.org/".$availability,
+	        "url" => $full_url,
+	        "shippingDetails" => [
+	          "@type" => "OfferShippingDetails",
+	          "shippingRate" => [
+	            "@type" => "MonetaryAmount",
+	            "value" => "55.00",
+	            "currency" => "USD",
+	          ],
+	          "shippingDestination" => [
+	            "@type" => "DefinedRegion",
+	            "addressCountry" => "US",
+	          ],
+	        ],
+	      ],
+	    ],
+	  ];
+	  // Add the JSON-LD schema to the head using Drupal's #attached array
+	  $variables['json_ld_data'] = $schema_data;
+	}else {
+		$variables['json_ld_data'] = '';
+	}*/
+}

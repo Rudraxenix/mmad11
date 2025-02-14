@@ -1,0 +1,11 @@
+extra.admin:
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css: {}
+      css/cmodule.css: {}
+  js:
+    https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js: {}
+    js/cmodule.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings

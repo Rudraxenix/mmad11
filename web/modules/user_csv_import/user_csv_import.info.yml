@@ -1,0 +1,8 @@
+name: User CSV Import
+description: Import users into Drupal from a CSV file
+core_version_requirement: ^8.8 || ^9 || ^10 || ^11
+type: module
+package: User
+
+dependencies:
+  - drupal:user

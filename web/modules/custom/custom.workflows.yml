@@ -1,0 +1,82 @@
+custom_fulfillment_status_processing:
+  id: custom_fulfillment_status_processing
+  group: commerce_order
+  label: 'Custom Fulfillment, with processing'
+  states:
+    draft:
+      label: 'Draft'
+    preordered:
+      label: 'Pre-ordered'
+    cart:
+      label: 'Shopping cart'
+    preordered_failed:
+      label: 'Pre-order processing failed'
+    checkout_checkout:
+      label: 'Checkout Checkout'
+    checkout_shipping:
+      label: 'Checkout Shipping'
+    checkout_review:
+      label: 'Checkout Review'
+    checkout_payment:
+      label: 'Checkout Payment'
+    checkout_complete:
+      label: 'Checkout Complete'
+    pending:
+      label: 'Pending'
+    paid_in_full:
+      label: 'Paid In Full'
+    in_setup:
+      label: 'In Setup'
+    setup_complete:
+      label: 'Setup Complete'
+    processing:
+      label: 'Processing'
+    shipped:
+      label: 'Shipped'
+    prepaid_opeongo:
+      label: 'Prepaid Opeongo'
+    prepaid_ian_tyson:
+      label: 'Prepaid Ian Tyson'
+    prepaid_tofino:
+      label: 'Prepaid Tofino'
+    prepaid_dionisio:
+      label: 'Prepaid Dionisio'
+    prepaid_algonquin_12:
+      label: 'Prepaid Algonquin 12'
+    prepaid_rb_dread:
+      label: 'Prepaid January RB Dread'
+    january_prepaid_baby_boat:
+      label: 'January prepaid Baby Boat'
+    preordered_success:
+      label: 'Pre-order paid'
+    prepaid_grand_manan:
+      label: 'Prepaid Grand Manan'
+    fulfillment:
+      label: 'Fulfillment'
+    completed:
+      label: 'Completed'
+    canceled:
+      label: 'Canceled'
+    refunded:
+      label: 'Refunded'
+  transitions:
+    place:
+      label: 'Place order'
+      from: [draft]
+      to: processing
+    process:
+      label: 'Process order'
+      from: [processing]
+      to: fulfillment
+    fulfill:
+      label: 'Shipping order'
+      from: [fulfillment]
+      to: shipped
+    ship:
+      label: 'Completed'
+      from: [shipped]
+      to: completed
+    cancel:
+      label: 'Cancel order'
+      from: [draft, processing, fulfillment]
+      to:   canceled

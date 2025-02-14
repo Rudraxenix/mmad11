@@ -1,0 +1,12 @@
+services:
+  custom_price.custom_price_resolver:
+    class: Drupal\custom\Resolver\CustomPriceResolver
+    arguments: ['@request_stack']
+    tags:
+      - { name: commerce_price.price_resolver, priority: 600 }
+
+  custom.order_complete:
+    class: Drupal\custom\EventSubscriber\OrderCompleteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }

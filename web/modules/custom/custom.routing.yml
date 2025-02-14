@@ -1,0 +1,62 @@
+custom.importproduct:
+  path: '/custom/import'
+  defaults:
+    _controller: '\Drupal\custom\Controller\CustomController::productimport'
+    _title: 'Product Import'
+  requirements: 
+    _permission: 'access content'
+
+custom.importuser:
+  path: '/custom/user/import'
+  defaults:
+    _controller: '\Drupal\custom\Controller\CustomController::usercustomimport'
+    _title: 'User Import'
+  requirements: 
+    _permission: 'access content'
+
+custom.customerprofileimport:
+  path: '/custom/customer/profile/import'
+  defaults:
+    _controller: '\Drupal\custom\Controller\CustomController::usercustomprofileimport'
+    _title: 'Customer Profile Import'
+  requirements: 
+    _permission: 'access content'
+
+custom.contentimport:
+  path: '/custom/content/import'
+  defaults:
+    _controller: '\Drupal\custom\Controller\CustomController::contentblogimport'
+    _title: 'Content Import'
+  requirements: 
+    _permission: 'access content'
+
+custom.orderimport:
+  path: '/custom/order/import'
+  defaults:
+    _controller: '\Drupal\custom\Controller\CustomController::customorderimport'
+    _title: 'Order Import'
+  requirements: 
+    _permission: 'access content'
+
+custom.reviewform:
+  path: '/order/review/{var1}'
+  defaults:
+    _form: '\Drupal\custom\Form\Customreviewform'
+  requirements:
+    _permission: 'access content'
+
+custom.CustomCartController:
+  path: '/custom-cart'
+  defaults:
+    _controller: '\Drupal\custom\Controller\CustomCartController::custom_cart_page'
+    _title: 'Cart'
+  requirements:
+    _permission: 'access content' 
+
+custom.changestate:
+  path: '/admin/change-state/{order_num}'
+  defaults:
+    _title: 'Change Order State'
+    _form: 'Drupal\custom\Form\StateForm'
+  requirements: 
+    _permission: 'access content'
